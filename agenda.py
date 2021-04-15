@@ -1,4 +1,7 @@
 from contacto import contacto
+from io import open                          #Importando módulo para crear archivo plano
+from graphviz import render                  #Importando módulo para renderizar desde python, agregar con pip graphviz
+import webbrowser                            #Módulo para abrir automaticamente el navegador
 
 class agenda():
     def __init__(self):
@@ -54,6 +57,40 @@ class agenda():
                 return temporal
             else:
                 temporal = temporal.siguiente
-        
         return None
-        
+    
+    def verCantidad(self):                                            #Ver agenda por consola
+        temporal = self.inicio
+        cantidad = 0
+        while temporal != None:
+            cantidad = cantidad + 1
+            temporal = temporal.siguiente
+        return cantidad
+
+    def crearImagen(self):
+        nombreImagen = 'miAgenda.dot'
+        salidaImagen = open(nombreImagen, 'w')
+        salidaImagen.write('digraph G { \n')
+        salidaImagen.write('node [shape=plaintext] \n')
+        salidaImagen.write('a [label=<<table border="0" cellborder="1" cellspacing="0"> \n')
+        cantidad = self.verCantidad()
+        salidaImagen.write('<tr><td colspan="3"> Contactos de mi agenda </td></tr>\n')
+        salidaImagen.write('<tr> \n')
+        salidaImagen.write('\t <td> Nombre </td>')
+        salidaImagen.write('<td> Apellido </td>')
+        salidaImagen.write('<td> Telefono </td>')
+        salidaImagen.write('</tr> \n')
+        temporal = self.inicio
+        while temporal != None:
+            salidaImagen.write('<tr> \n')
+            salidaImagen.write('\t <td>' + temporal.nombre + '</td> <td>' + temporal.apellido + '</td> <td>' + str(temporal.telefono) + '</td>')
+            salidaImagen.write('</tr> \n')
+            temporal = temporal.siguiente
+
+        salidaImagen.write('</table>>]; \n')
+        salidaImagen.write('}')
+        salidaImagen.close()
+        render('dot', 'png', nombreImagen)                                #Renderizar el archivo DOT escrito
+
+        webbrowser.open_new_tab("miAgenda.dot.png")                       #Abrir navegador para visualizar agenda
+

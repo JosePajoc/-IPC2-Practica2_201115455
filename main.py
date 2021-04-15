@@ -7,7 +7,7 @@ op = 0
 def separador():
     print('---------------------------------------------------------------------------------------')
 
-def nuevoContacto():
+def nuevoContacto():                                                    #Crear nodo contacto y agregarlo a la agenda
     try:
         nombre = input('\nNombre: ')
         apellido = input('\nApellido: ')
@@ -49,7 +49,11 @@ while op != 4:
         separador()
     elif op == 3:
         separador()
-        miAgenda.verAgenda()
+        if miAgenda.verCantidad() == 0:
+            print('No hay contactos registrados')
+        else:
+            miAgenda.crearImagen()
+            print('Visualizar mi agenda...')
         separador()
 
     
